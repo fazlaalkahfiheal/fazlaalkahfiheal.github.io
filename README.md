@@ -25,18 +25,22 @@ python -m http.server 8000
 ## Struktur Folder
 
 ```
-portfolio/
+portofolio_fazla/
 ├── index.html
 ├── style.css
 ├── script.js
+├── robots.txt
+├── sitemap.xml
+├── .nojekyll
+├── .gitignore
 ├── assets/
 │   ├── profile.jpg
 │   ├── cv.pdf
 │   └── projects/
-│       ├── sitani.jpg
-│       ├── smartfit.jpg
-│       ├── arduino-security.jpg
-│       └── animasi-2d.jpg
+│       ├── sitani.png
+│       ├── smartfit.png
+│       ├── animasi-2d.png
+│       └── arduino-security.png
 └── README.md
 ```
 
@@ -74,33 +78,42 @@ Dimuat dari Google Fonts. Bila offline, browser akan memakai font sistem sebagai
 
 ## Yang Perlu Anda Ganti
 
-Placeholder di repo ini sengaja dibuat netral supaya tidak ada data fiktif.
-Ganti bagian berikut dengan data asli Anda:
+Data yang sudah terisi:
 
-| Item                    | File                | Nilai sekarang                     |
-| ----------------------- | ------------------- | ---------------------------------- |
-| Foto profil             | `assets/profile.jpg`| Foto asli (sudah terisi)          |
-| CV                      | `assets/cv.pdf`     | File CV Anda sendiri              |
-| Screenshot proyek      | `assets/projects/*.jpg` | Placeholder — ganti dengan tangkapan layar |
-| Link WhatsApp           | `index.html`        | `href="#"`                         |
-| Link Instagram          | `index.html`        | `href="#"`                         |
-| Alamat email            | `index.html`        | `href="mailto:"`                   |
-| Link repository proyek | `index.html`        | `href="#"`                         |
+| Item                    | File                | Nilai                                  |
+| ----------------------- | ------------------- | -------------------------------------- |
+| Foto profil             | `assets/profile.jpg`| Foto asli                              |
+| CV                      | `assets/cv.pdf`     | File CV Anda sendiri                   |
+| Screenshot proyek       | `assets/projects/*.png` | Screenshot asli, format `.png`      |
+| Link WhatsApp           | `index.html`        | `wa.me/6285692844770`                  |
+| Link Instagram          | `index.html`        | `instagram.com/fazzheal`               |
+| Alamat email            | `index.html`        | `mailto:fazlaalkahfi971@gmail.com`     |
+| Link repository proyek  | `index.html`        | Belum ada — tombol menampilkan "Segera tersedia" |
 
-Format link yang bisa dipakai:
+### Menambahkan Link Repository Proyek
 
+Repo proyek belum tersedia, jadi tiap kartu project menampilkan tombol non-klik
+"Segera tersedia". Untuk mengaktifkannya, ganti satu `<span>` dengan `<a>`:
+
+```html
+<!-- sebelum -->
+<span class="btn btn-outline btn-sm btn-disabled" aria-disabled="true">
+  <i class="bi bi-hourglass-split" aria-hidden="true"></i> Segera tersedia
+</span>
+
+<!-- sesudah -->
+<a href="https://github.com/fazlaalkahfiheal/nama-repo" class="btn btn-outline btn-sm"
+   target="_blank" rel="noopener noreferrer">
+  <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Lihat Proyek
+</a>
 ```
-WhatsApp   https://wa.me/628XXXXXXXXX
-Instagram  https://instagram.com/username
-```
 
-> Catatan: gambar hanya boleh berformat `.jpg` (huruf kecil). Kalau memakai `.png`,
-> pastikan nama file di `index.html` ikut disesuaikan, atau konversi dulu:
-> `python -c "from PIL import Image; im=Image.open('foto.png').convert('RGB'); im.thumbnail((720,720)); im.save('assets/profile.jpg', quality=90, optimize=True)"`
+Kelas `btn-disabled` di `style.css` bisa dihapus setelah tidak ada tombol non-klik lagi.
 
-Mengganti gambar cukup dengan menaruh file dengan nama yang sama di folder yang sama.
-Kalau file gambar dihapus, halaman **tidak akan rusak** — `onerror="this.remove()"` +
-CSS gradient membuat fallback transparan tetap tampil rapi.
+> Catatan: gambar project berformat `.png`. Kalau kamu ganti ke format lain,
+> pastikan nama file di `index.html` ikut disesuaikan. Kalau file gambar dihapus,
+> halaman **tidak akan rusak** — `onerror="this.remove()"` + CSS gradient
+> membuat fallback transparan tetap tampil rapi.
 
 ## Menyesuaikan Konten
 
@@ -163,10 +176,56 @@ Sudah diuji pada 1920, 1440, 1366, 768, 430, 390, dan 360 px.
 
 ## SEO
 
-Title, meta description, keywords, Open Graph, dan favicon SVG inline sudah diatur di
-`<head>`.
+Sudah diatur di `<head>`:
+
+- `<title>`, `meta description`, `keywords`, `author`
+- Open Graph lengkap (`og:title`, `og:description`, `og:url`, `og:image`, `og:locale`)
+- Twitter Card (`summary`)
+- `<link rel="canonical">`
+- JSON-LD `schema.org/Person` (nama, afiliasi, email, `sameAs`, `knowsAbout`)
+- Favicon SVG inline
+
+File pendukung crawler di root repo:
+
+| File           | Fungsi                                              |
+| -------------- | --------------------------------------------------- |
+| `robots.txt`   | Mengizinkan crawling + menunjuk ke sitemap         |
+| `sitemap.xml`  | Peta URL untuk Google Search Console                |
+| `.nojekyll`    | Mematikan Jekyll agar file/raw tidak dilewati       |
+
+Semua URL di dalam file ini memakai domain `https://fazlaalkahfiheal.github.io`.
+Kalau nama repository berubah, sesuaikan juga `canonical`, `og:url`, `robots.txt`,
+dan `sitemap.xml`.
+
+## Deploy ke GitHub Pages
+
+Domain publish: `https://fazlaalkahfiheal.github.io`
+
+Karena repo ini berisi HTML statis di root, cukup publish langsung dari branch —
+tidak perlu build step.
+
+1. Push repo ke GitHub
+2. **Settings → Pages → Source: Deploy from a branch**
+3. Pilih branch `master`, folder `/ (root)`
+4. Tunggu ±1 menit sampai URL aktif
+
+## Mendaftarkan ke Google Search Console
+
+Supaya situs muncul di pencarian Google:
+
+1. Buka <https://search.google.com/search-console>
+2. **Add property → URL prefix** → masukkan `https://fazlaalkahfiheal.github.io`
+3. Verifikasi pakai **HTML tag**: salin `<meta>` yang diberikan, lalu tempel ke
+   dalam `<head>` pada `index.html`, lalu push ulang
+4. **Sitemaps** → masukkan `sitemap.xml` → Submit
+5. **URL Inspection** → tempel URL situs → **Request Indexing**
+
+Perkiraan indeks: 3–7 hari setelah sitemap diterima, bisa lebih lama untuk situs baru.
 
 ## Catatan
 
-Belum ada pengalaman kerja formal, sertifikat, atau prestasi yang dicantumkan —
- Sengaja seluruh isi berfokus pada project, skill, pendidikan, dan proses belajar — tanpa data yang tidak diberikan.
+- Belum ada pengalaman kerja formal, sertifikat, atau prestasi yang dicantumkan —
+  Sengaja seluruh isi berfokus pada project, skill, pendidikan, dan proses belajar — tanpa data yang tidak diberikan.
+- Tombol repository project masih non-klik karena repo-nya belum dipublikasikan.
+- Screenshot project masih `.png` berukuran besar (±3,3 MB total);_optimasi ke WebP/JPG
+  masih bisa dilakukan bila halaman terasa lambat.
