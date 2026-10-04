@@ -1,0 +1,11 @@
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# never commit these - they are personal files
+# (uncomment if you do not want them in the repo)
+# assets/cv.pdf
+# assets/profile.jpg
